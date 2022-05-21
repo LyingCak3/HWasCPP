@@ -2,12 +2,14 @@
 
 set( target drivers )
 
-set( sources 
+set( sources
+        DriverFactory.cpp
         SimpleDriver.cpp
     )
 
 set( headers 
         DriverInterface.hpp
+        DriverFactory.hpp
         SimpleDriver.hpp
     )
 
