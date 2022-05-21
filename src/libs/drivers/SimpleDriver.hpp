@@ -1,4 +1,7 @@
 
+#ifndef SimpleDriver_hpp
+#define SimpleDriver_hpp
+
 #include "DriverInterface.hpp"
 
 namespace kac
@@ -7,12 +10,16 @@ namespace kac
 namespace cudalearn
 {
 
-class SimpleDriver : DriverInterface
+class SimpleDriver : public DriverInterface
 {
+
+public:
 
     SimpleDriver();
 
     ~SimpleDriver();
+
+    void virtual ParseArguments( int argc, char* argv );
 
     void virtual Initialize();
 
@@ -25,3 +32,5 @@ class SimpleDriver : DriverInterface
 }
 
 }
+
+#endif
