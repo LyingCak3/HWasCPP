@@ -4,6 +4,7 @@ cmake_minimum_required( VERSION 3.18.2 FATAL_ERROR )
 
 set( CMAKE_CXX_STANDARD 17 )
 set( CMAKE_CXX_STANDARD_REQUIRED TRUE )
+set( CMAKE_CXX_EXTENSIONS FALSE )
 
 set( CMAKE_CUDA_STANDARD 17 )
 set( CMAKE_CUDA_STANDARD_REQUIRED TRUE )
@@ -20,12 +21,21 @@ find_package_handle_standard_args( Boost CONFIG_MODE )
 
 # enable_language( CUDA )
 
-set( target CuLearning )
+##
+# Project Level Variables
+##
 
-add_library( ${target} SHARED )
-
-target_link_libraries( ${target} 
-                            PRIVATE     CUDA::cudart        
-    )
+set( PROJECT_CXX_FLAGS
+    $<$<CXX_COMPILER_ID:NVHPC,GNU>:-pedantic>
+    $<$<CXX_COMPILER_ID:NVHPC,GNU>:-Werror>
+    $<$<CXX_COMPILER_ID:NVHPC,GNU>:-Wshadow>
+    $<$<CXX_COMPILER_ID:NVHPC,GNU>:-Wsign-compare>
+    $<$<CXX_COMPILER_ID:NVHPC,GNU>:-Wstrict-prototypes>
+    $<$<CXX_COMPILER_ID:NVHPC,GNU>:-Wundef>
+    $<$<CXX_COMPILER_ID:NVHPC,GNU>:-Wuninitialized>
+    $<$<CXX_COMPILER_ID:NVHPC,GNU>:-Wunused-parameter>
+    $<$<CXX_COMPILER_ID:NVHPC,GNU>:-Wunused-variable>
+    $<$<CXX_COMPILER_ID:NVHPC,GNU>:-W>
+)
 
 add_subdirectory( src )
