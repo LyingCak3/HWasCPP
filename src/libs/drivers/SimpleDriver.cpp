@@ -41,3 +41,4 @@ kac::cudalearn::SimpleDriver::Finalize()
 }
 
 kac::cudalearn::DriverFactory::RegisterMachine<kac::cudalearn::SimpleDriver> _SimpleDriver( "SimpleDriver" );
+

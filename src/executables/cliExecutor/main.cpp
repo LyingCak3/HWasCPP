@@ -5,7 +5,7 @@
 int main( int argc, char* argv )
 {
 
-    std::unique_ptr< kac::cudalearn::DriverInterface > driver = kac::cudalearn::DriverFactory::GetFactory().CreateMachine( "SimpleDriver" );
+    std::unique_ptr< kac::cudalearn::DriverInterface > driver = kac::cudalearn::DriverFactory::GetFactory().ConstructMachine( "SimpleDriver" );
 
     driver->Initialize();
 

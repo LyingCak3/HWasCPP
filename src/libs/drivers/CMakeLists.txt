@@ -22,3 +22,8 @@ target_compile_options( ${target}
 target_include_directories( ${target} 
                                 PUBLIC  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     ) 
+
+
+target_link_libraries( ${target} 
+                        PUBLIC  Utils
+    )
