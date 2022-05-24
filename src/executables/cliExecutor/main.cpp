@@ -2,7 +2,7 @@
 #include "DriverFactory.hpp"
 #include "DriverInterface.hpp"
 
-int main( int argc, char* argv )
+int main( int argc, char** argv )
 {
 
     std::unique_ptr< kac::cudalearn::DriverInterface > driver = kac::cudalearn::DriverFactory::GetFactory().ConstructMachine( "SimpleDriver" );

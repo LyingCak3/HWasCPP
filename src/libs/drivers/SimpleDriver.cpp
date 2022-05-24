@@ -15,7 +15,7 @@ kac::cudalearn::SimpleDriver::~SimpleDriver()
 }
 
 void
-kac::cudalearn::SimpleDriver::ParseArguments( int argc, char* argv )
+kac::cudalearn::SimpleDriver::ParseArguments( int argc, char** argv )
 {
     std::cout << "Calling " << __FILE__ << " ParseArguments function" << std::endl;
     std::cout << "\tNumber of args: " << argc << std::endl;

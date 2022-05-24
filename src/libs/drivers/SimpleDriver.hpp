@@ -19,7 +19,7 @@ public:
 
     ~SimpleDriver();
 
-    void virtual ParseArguments( int argc, char* argv );
+    void virtual ParseArguments( int argc, char** argv );
 
     void virtual Initialize();
 

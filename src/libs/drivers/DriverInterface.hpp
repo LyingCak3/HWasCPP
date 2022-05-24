@@ -17,7 +17,7 @@ public:
 
     ~DriverInterface(){};
 
-    void virtual ParseArguments( int argc, char* argv ) = 0;
+    void virtual ParseArguments( int argc, char** argv ) = 0;
 
     void virtual Initialize() = 0;
 
