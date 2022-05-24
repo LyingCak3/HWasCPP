@@ -14,7 +14,22 @@ namespace kac
 namespace cudalearn
 {
 
-using DriverFactory = factory::GenericFactory<DriverInterface>;
+class DriverFactory : public factory::GenericFactory<DriverInterface>
+{
+public:
+
+    static DriverFactory& GetFactory();
+
+    DriverFactory( DriverFactory& ) = delete;
+    DriverFactory( DriverFactory&& ) = delete;
+
+    DriverFactory& operator=( DriverFactory& ) = delete;
+
+private:
+
+    DriverFactory() : factory::GenericFactory<DriverInterface>() {};
+
+};
 
 }
 

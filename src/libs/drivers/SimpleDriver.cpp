@@ -40,5 +40,5 @@ kac::cudalearn::SimpleDriver::Finalize()
     std::cout << "Calling " << __FILE__ << " Finalize function" << std::endl;
 }
 
-kac::cudalearn::DriverFactory::RegisterMachine<kac::cudalearn::SimpleDriver> _SimpleDriver( "SimpleDriver" );
+kac::cudalearn::DriverFactory::RegisterMachine<kac::cudalearn::SimpleDriver> _SimpleDriver( "SimpleDriver", kac::cudalearn::DriverFactory::GetFactory() );
 

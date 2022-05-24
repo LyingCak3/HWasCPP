@@ -4,6 +4,7 @@
 
 #include <map>
 #include <memory>
+#include <functional>
 
 namespace kac
 {
@@ -14,114 +15,52 @@ namespace cudalearn
 namespace factory
 {
 
-template< typename T >
-class GenericFactory;
-
-namespace detail
-{
-
-template< typename... T>
-class MachineConstructor
-{
-
-public:
-
-    std::unique_ptr<nullptr_t> operator()()
-    {
-        return nullptr;
-    }
-
-};
-
-template< typename T >
-class MachineConstructor<T>
-{
-
-public:
-
-    template< typename... ARGS >
-    std::unique_ptr<T> operator()( ARGS&&... args )
-    {
-        return std::unique_ptr<T>( new T( std::forward<ARGS>(args)... ) );
-    }
-
-};
-
-template< typename T, typename N >
-class MachineConstructor<T, N>
-{
-public:
-
-    template< typename... ARGS > 
-    std::unique_ptr<T> operator()( ARGS&&... args )
-    {
-        return std::unique_ptr<T>( new N( std::forward<ARGS>(args)... ) );
-    }
-};
-
-template< typename... T >
-class RegisterMachine
-{
-public:
-    RegisterMachine( const std::string name ) = delete;
-};
-
-template< typename T >
-class RegisterMachine<T>
-{
-public:
-    RegisterMachine( const std::string name )
-    {
-        GenericFactory<T>::AddMachine( name, MachineConstructor< T >() );
-    }
-
-};
-
-template< typename T, typename N >
-class RegisterMachine<T, N>
-{
-public:
-    RegisterMachine( const std::string name )
-    {
-        GenericFactory<T>::AddMachine( name, MachineConstructor<T, N>() );
-    }
-
-};
-
-}
-
-template< typename T >
+template< typename T, typename... ARGS >
 class GenericFactory
 {
 
 public:
 
-    template< typename N >
-    using RegisterMachine = detail::RegisterMachine<T, N>;
+    typedef T   BaseType;
+    typedef std::function<std::unique_ptr<T>(ARGS...)> Functor;
 
-    static GenericFactory<T>& GetFactory(){
-        static GenericFactory<T> factory;
-        return factory;
+    bool AddMachine( const std::string name, Functor constructor )
+    {
+        auto result = machines_.emplace( name, constructor );
+        return result.second;
+    }
+
+    std::unique_ptr<T> ConstructMachine( const std::string name, ARGS&&... args )
+    {
+        return machines_.at( name )( std::forward<ARGS>( args )... );
+    }
+
+    template< typename N = BaseType >
+    class DefaultMachineConstructor
+    {
+    public:
+        std::unique_ptr<T> operator()( ARGS&&... args )
+        {
+            return std::unique_ptr<T>( new N( std::forward<ARGS>(args)... ) );
+        }
     };
 
-    template< typename... ARGS>
-    static void AddMachine( const std::string name, detail::MachineConstructor<ARGS...> constructor )
+    template< typename N = BaseType >
+    class RegisterMachine
     {
-        GetFactory().machines_.insert( std::make_pair( name, constructor ) );
-    }
+    public:
+        RegisterMachine( const std::string name, GenericFactory<T, ARGS...>& factory, Functor construtor = DefaultMachineConstructor<N>() )
+        {
+            factory.AddMachine( name, construtor );
+        }
 
-    template< typename... ARGS >
-    static std::unique_ptr<T> ConstructMachine( const std::string name, ARGS&&... args )
-    {
-        return GetFactory().machines_.at( name )->operator()( std::forward<ARGS>( args )... );
-    }
+    };
 
 protected:
 
     GenericFactory() : machines_() {};
 
-    std::map< const std::string, const detail::MachineConstructor<> > machines_; 
-
+    std::map< const std::string, Functor > machines_; 
 
 };
 
