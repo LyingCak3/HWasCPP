@@ -35,7 +35,7 @@ set( CMAKE_BUILD_RPATH_USE_ORIGIN TRUE )
 ##
 find_package( CUDAToolkit REQUIRED )
 
-find_package( Boost 1.79 REQUIRED CONFIG )
+find_package( Boost 1.79...<999.999 REQUIRED CONFIG COMPONENTS program_options )
 find_package_handle_standard_args( Boost CONFIG_MODE )
 
 
@@ -48,11 +48,13 @@ set( PROJECT_CXX_FLAGS
     $<$<CXX_COMPILER_ID:NVHPC,GNU>:-Werror>
     $<$<CXX_COMPILER_ID:NVHPC,GNU>:-Wshadow>
     $<$<CXX_COMPILER_ID:NVHPC,GNU>:-Wsign-compare>
-    $<$<CXX_COMPILER_ID:NVHPC,GNU>:-Wstrict-prototypes>
     $<$<CXX_COMPILER_ID:NVHPC,GNU>:-Wundef>
     $<$<CXX_COMPILER_ID:NVHPC,GNU>:-Wuninitialized>
     $<$<CXX_COMPILER_ID:NVHPC,GNU>:-Wunused-parameter>
     $<$<CXX_COMPILER_ID:NVHPC,GNU>:-Wunused-variable>
+    $<$<CXX_COMPILER_ID:GNU>:-Wall>
+    $<$<CXX_COMPILER_ID:GNU>:-Wextra>
+    $<$<CXX_COMPILER_ID:GNU>:-Wunused>
 )
 
 set( PROJECT_LINKER_FLAGS
