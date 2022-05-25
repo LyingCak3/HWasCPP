@@ -12,28 +12,50 @@ namespace po = boost::program_options;
 int main( int argc, char** argv )
 {
 
-    po::options_description desc( "Options" );
-    desc.add_options()
-        ( "help", "produce help message" )
-        ( "driver", po::value< std::string >(), "Driver to execute" )
+    po::options_description all( "All Options" );
+    all.add_options()
+        ( "help", "Produce this help message" )
     ;
 
-    po::variables_map vm;
-    po::parsed_options parsed = po::command_line_parser( argc, argv ).options(desc).allow_unregistered().run();
-    po::store( parsed, vm );
-    po::notify( vm );
+    po::options_description desc( "Executor Options" );
+    desc.add_options()
+        ( "driver", po::value< std::string >()->default_value( "SimpleDriver" ), "Driver to execute" )
+    ;
 
-    std::vector< std::string > pass_to_driver = po::collect_unrecognized( parsed.options, po::include_positional );
+    all.add( desc );
 
-    if ( vm.count( "help" ) )
+    std::unique_ptr< kac::cudalearn::DriverInterface > driver( nullptr );
+
     {
-        std::cout << desc << std::endl;
-        return 0;
+        po::variables_map vm;
+        po::command_line_parser parser = po::command_line_parser( argc, argv );
+        po::store( parser.options(desc).allow_unregistered().run(), vm );
+        po::notify( vm );
+
+        std::string driverName;
+
+        if ( 0 != vm.count( "driver" ) )
+        {
+            driverName = vm.at( "driver" ).as<std::string>();
+        }
+
+        driver = kac::cudalearn::DriverFactory::GetFactory().ConstructMachine( driverName );
     }
 
-    std::unique_ptr< kac::cudalearn::DriverInterface > driver = kac::cudalearn::DriverFactory::GetFactory().ConstructMachine( "SimpleDriver" );
+    driver->SetupArguments( all );
 
-    driver->ParseArguments(argc, argv);
+    po::variables_map vm;
+    po::command_line_parser parser = po::command_line_parser( argc, argv );
+    po::store( parser.options(all).run(), vm );
+    po::notify( vm );
+
+    if ( 0 != vm.count( "help" ) )
+    {
+        std::cout << all << std::endl;
+        return 0;
+    } 
+
+    driver->ParseArguments( vm );
 
     driver->Initialize();
 

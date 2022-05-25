@@ -19,7 +19,9 @@ public:
 
     ~SimpleDriver();
 
-    void virtual ParseArguments( int argc, char** argv );
+    void virtual SetupArguments( boost::program_options::options_description& driverDesc );
+
+    void virtual ParseArguments( boost::program_options::variables_map& map );
 
     void virtual Initialize();
 

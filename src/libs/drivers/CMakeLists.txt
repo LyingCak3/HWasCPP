@@ -26,4 +26,5 @@ target_include_directories( ${target}
 
 target_link_libraries( ${target} 
                         PUBLIC  Utils
+                                Boost::program_options
     )

@@ -2,6 +2,10 @@
 #ifndef DriverInterface_hpp
 #define DriverInterface_hpp
 
+#include <boost/program_options.hpp>
+
+#include <vector>
+
 namespace kac
 {
 
@@ -17,7 +21,9 @@ public:
 
     ~DriverInterface(){};
 
-    void virtual ParseArguments( int argc, char** argv ) = 0;
+    void virtual SetupArguments( boost::program_options::options_description& driverDesc ) = 0;
+
+    void virtual ParseArguments( boost::program_options::variables_map& map ) = 0;
 
     void virtual Initialize() = 0;
 
